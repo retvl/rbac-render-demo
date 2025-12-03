@@ -14,13 +14,19 @@ app = Flask(__name__)
 # Конфигурация для Render
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-2024')
 
-# Используем PostgreSQL на Render, SQLite локально
+# 🔧 ИСПРАВЛЕННЫЙ КОД: Настройка базы данных
 if os.environ.get('RENDER'):
-    # На Render используем PostgreSQL
+    # На Render используем PostgreSQL, если есть DATABASE_URL
     database_url = os.environ.get('DATABASE_URL')
-    if database_url and database_url.startswith('postgres://'):
-        database_url = database_url.replace('postgres://', 'postgresql://', 1)
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    if database_url:
+        # Исправляем для SQLAlchemy
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    else:
+        # Если нет PostgreSQL, используем SQLite во временной директории
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/rbac.db'
+        print("⚠️ Используем SQLite во временной директории")
 else:
     # Локально используем SQLite
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rbac.db'
