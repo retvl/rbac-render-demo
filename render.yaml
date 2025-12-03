@@ -1,19 +1,10 @@
 services:
-  # Веб-сервис
   - type: web
-    name: rbac-demo
-    runtime: python
+    name: rbac-render-demo
+    env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
       - key: PYTHON_VERSION
-        value: 3.10.12
-      - key: SECRET_KEY
-        generateValue: true
-    autoDeploy: true
-
-databases:
-  # База данных PostgreSQL
-  - name: rbacdb
-    databaseName: rbac
-    plan: free
+        value: 3.11.0

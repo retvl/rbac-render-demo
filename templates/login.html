@@ -1,32 +1,61 @@
 {% extends "base.html" %}
 
+{% block title %}Вход в систему - RBAC Demo{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h4>Вход в систему</h4>
+                <h4 class="mb-0">🔐 Вход в систему</h4>
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('login') }}">
                     <div class="mb-3">
                         <label for="username" class="form-label">Имя пользователя</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
+                        <input type="text" class="form-control" id="username" name="username" 
+                               placeholder="Введите имя пользователя" required>
                     </div>
+                    
                     <div class="mb-3">
                         <label for="password" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input type="password" class="form-control" id="password" name="password" 
+                               placeholder="Введите пароль" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Войти</button>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Войти</button>
+                    </div>
                 </form>
                 
-                <hr>
-                <h6>Тестовые учетные записи:</h6>
-                <div class="small">
-                    <p><strong>Администратор:</strong> admin / admin123</p>
-                    <p><strong>Модератор:</strong> moderator / moderator123</p>
-                    <p><strong>Пользователь:</strong> user / user123</p>
-                    <p><strong>Гость:</strong> guest / guest123</p>
+                <hr class="my-4">
+                
+                <div class="alert alert-info">
+                    <h6>Тестовые аккаунты:</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Администратор</strong><br>
+                            Логин: <code>admin</code><br>
+                            Пароль: <code>admin123</code>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Модератор</strong><br>
+                            Логин: <code>moderator</code><br>
+                            Пароль: <code>moderator123</code>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <strong>Пользователь</strong><br>
+                            Логин: <code>user</code><br>
+                            Пароль: <code>user123</code>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Гость</strong><br>
+                            Логин: <code>guest</code><br>
+                            Пароль: <code>guest123</code>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

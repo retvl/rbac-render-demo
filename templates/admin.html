@@ -1,88 +1,117 @@
 {% extends "base.html" %}
 
+{% block title %}Панель администратора - RBAC Demo{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Панель администратора</h2>
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header bg-danger text-white">
-                        <h5>Полное управление пользователями</h5>
-                    </div>
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Имя пользователя</th>
-                                    <th>Роль</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for user in users %}
-                                <tr>
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.username }}</td>
-                                    <td>
-                                        <span class="badge 
-                                            {% if user.role == 'Администратор' %}bg-danger
-                                            {% elif user.role == 'Модератор' %}bg-warning
-                                            {% elif user.role == 'Пользователь' %}bg-primary
-                                            {% else %}bg-secondary{% endif %}">
-                                            {{ user.role }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <!-- Исправленная строка: добавлен type="button" -->
-                                        <button type="button" class="btn btn-sm btn-danger" 
-                                                onclick="deleteUser({{ user.id }})"
-                                                {% if user.id == current_user.id %}disabled{% endif %}>
-                                            Удалить
-                                        </button>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+<div class="container mt-4">
+    <h2 class="mb-4">👥 Управление пользователями</h2>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Список пользователей</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя пользователя</th>
+                        <th>Email</th>
+                        <th>Роль</th>
+                        <th>Дата регистрации</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>
+                            {{ user.username }}
+                            {% if user.id == current_user.id %}
+                            <span class="badge bg-info ms-2">Вы</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if user.role == 'Администратор' %}bg-danger
+                                {% elif user.role == 'Модератор' %}bg-warning text-dark
+                                {% elif user.role == 'Пользователь' %}bg-primary
+                                {% else %}bg-secondary{% endif %}">
+                                {{ user.role }}
+                            </span>
+                        </td>
+                        <td>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else '-' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-warning"
+                                    {% if user.id == current_user.id %}disabled title="Нельзя изменить свою роль"{% endif %}>
+                                Изменить роль
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger ms-1"
+                                    {% if user.id == current_user.id %}disabled title="Нельзя удалить себя"{% endif %}>
+                                Удалить
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="text-muted">Всего пользователей: {{ users|length }}</p>
+        </div>
+    </div>
+    
+    <h2 class="mb-4">📋 Логи действий</h2>
+    <div class="card">
+        <div class="card-header">
+            <h5>Последние 20 действий</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>Пользователь</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td><strong>{{ log.username }}</strong></td>
+                        <td>{{ log.action }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="text-muted">Всего записей в логе: {{ logs|length }}</p>
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>⚙️ Административные действия</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <button class="btn btn-outline-success w-100">
+                        Создать резервную копию
+                    </button>
                 </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>Журнал аудита (последние 50 записей)</h5>
-                    </div>
-                    <div class="card-body">
-                        <div style="max-height: 400px; overflow-y: auto;">
-                            {% for log in logs %}
-                            <div class="log-entry mb-2">
-                                <small>
-                                    <strong>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</strong><br>
-                                    {{ log.action }}<br>
-                                    <span class="text-muted">IP: {{ log.ip_address }}</span>
-                                </small>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+                <div class="col-md-4 mb-2">
+                    <button class="btn btn-outline-info w-100">
+                        Очистить старые логи
+                    </button>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <button class="btn btn-outline-dark w-100">
+                        Настройки системы
+                    </button>
                 </div>
             </div>
         </div>
-        
-        <div class="alert alert-success">
-            <h6>Полные права администратора:</h6>
-            <ul>
-                <li>Просмотр и удаление всех пользователей</li>
-                <li>Доступ к полному журналу аудита</li>
-                <li>Все права модератора и пользователя</li>
-            </ul>
-        </div>
-        
-        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Назад в личный кабинет</a>
     </div>
 </div>
 {% endblock %}

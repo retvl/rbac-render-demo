@@ -1,70 +1,97 @@
 {% extends "base.html" %}
 
+{% block title %}Панель модератора - RBAC Demo{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Панель модератора</h2>
-        
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Управление пользователями</h5>
-            </div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Имя пользователя</th>
-                            <th>Email</th>
-                            <th>Роль</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in users %}
-                        <tr>
-                            <td>{{ user.id }}</td>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                <span class="badge 
-                                    {% if user.role == 'Администратор' %}bg-danger
-                                    {% elif user.role == 'Модератор' %}bg-warning
-                                    {% elif user.role == 'Пользователь' %}bg-primary
-                                    {% else %}bg-secondary{% endif %}">
-                                    {{ user.role }}
-                                </span>
-                            </td>
-                            <td>
-                                {% if current_user.has_permission(8) %}
-                                    <select class="form-select form-select-sm" 
-                                            onchange="changeRole({{ user.id }}, this.value)"
-                                            {% if user.id == current_user.id %}disabled{% endif %}>
-                                        <option value="Гость" {% if user.role == 'Гость' %}selected{% endif %}>Гость</option>
-                                        <option value="Пользователь" {% if user.role == 'Пользователь' %}selected{% endif %}>Пользователь</option>
-                                        <option value="Модератор" {% if user.role == 'Модератор' %}selected{% endif %}>Модератор</option>
-                                        <option value="Администратор" {% if user.role == 'Администратор' %}selected{% endif %}>Администратор</option>
-                                    </select>
-                                {% else %}
-                                    <span class="text-muted">Нет прав</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                
-                <div class="alert alert-warning">
-                    <small>
-                        <strong>Ограничение возможностей модератора:</strong><br>
-                        Модератор может просматривать всех пользователей и изменять их роли, 
-                        но не может удалять пользователей (это право только у администратора).
-                    </small>
+<div class="container mt-4">
+    <h2 class="mb-4">🛡️ Панель модератора</h2>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Управление пользователями</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Вы можете управлять пользователями с ролями "Гость" и "Пользователь"</p>
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя пользователя</th>
+                        <th>Email</th>
+                        <th>Роль</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if user.role == 'Пользователь' %}bg-primary
+                                {% else %}bg-secondary{% endif %}">
+                                {{ user.role }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-warning">
+                                Изменить на 
+                                {% if user.role == 'Пользователь' %}Гостя{% else %}Пользователя{% endif %}
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <p class="text-muted">Всего пользователей для модерации: {{ users|length }}</p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h5>📝 Модерация контента</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5>✏️ Статьи</h5>
+                            <p class="display-6">5</p>
+                            <button class="btn btn-sm btn-outline-primary w-100">Модерировать</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5>💬 Комментарии</h5>
+                            <p class="display-6">12</p>
+                            <button class="btn btn-sm btn-outline-primary w-100">Модерировать</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5>⚠️ Жалобы</h5>
+                            <p class="display-6">3</p>
+                            <button class="btn btn-sm btn-outline-danger w-100">Проверить</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Назад в личный кабинет</a>
+    </div>
+    
+    <div class="mt-4 text-center">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+            ← Вернуться в панель управления
+        </a>
     </div>
 </div>
 {% endblock %}

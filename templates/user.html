@@ -1,60 +1,45 @@
 {% extends "base.html" %}
 
+{% block title %}Мой профиль - RBAC Demo{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Личный кабинет пользователя</h2>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Добро пожаловать, {{ current_user.username }}!</h5>
-                <p class="card-text">Ваша роль: <strong>{{ current_user.role }}</strong></p>
-                
-                <h6>Ваши разрешения:</h6>
-                <ul>
-                    {% if current_user.has_permission(1) %}
-                        <li>Просмотр панели управления</li>
-                    {% endif %}
-                    {% if current_user.has_permission(2) %}
-                        <li>Редактирование своего профиля</li>
-                    {% endif %}
-                    {% if current_user.has_permission(4) %}
-                        <li>Просмотр всех пользователей</li>
-                    {% endif %}
-                    {% if current_user.has_permission(8) %}
-                        <li>Редактирование пользователей</li>
-                    {% endif %}
-                    {% if current_user.has_permission(16) %}
-                        <li>Удаление пользователей</li>
-                    {% endif %}
-                    {% if current_user.has_permission(32) %}
-                        <li>Просмотр логов</li>
-                    {% endif %}
-                    {% if current_user.has_permission(64) %}
-                        <li>Управление системой</li>
-                    {% endif %}
-                </ul>
-                
-                <h6>Доступные разделы:</h6>
-                <div class="mb-3">
-                    {% if current_user.role in ['Администратор', 'Модератор'] %}
-                        <a href="{{ url_for('moderator_panel') }}" class="btn btn-info me-2">
-                            Панель модератора
-                        </a>
-                    {% endif %}
-                    
-                    {% if current_user.role == 'Администратор' %}
-                        <a href="{{ url_for('admin_panel') }}" class="btn btn-danger">
-                            Панель администратора
-                        </a>
-                    {% endif %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">👤 Мой профиль</h4>
                 </div>
-                
-                <div class="alert alert-info">
-                    <small>
-                        <strong>Принцип наименьших привилегий в действии:</strong><br>
-                        Каждый пользователь видит только те элементы интерфейса и имеет только те возможности, 
-                        которые необходимы для выполнения его функций.
-                    </small>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Имя пользователя:</div>
+                        <div class="col-md-9">{{ user.username }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Email:</div>
+                        <div class="col-md-9">{{ user.email }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Роль:</div>
+                        <div class="col-md-9">
+                            <span class="badge 
+                                {% if user.role == 'Администратор' %}bg-danger
+                                {% elif user.role == 'Модератор' %}bg-warning text-dark
+                                {% elif user.role == 'Пользователь' %}bg-primary
+                                {% else %}bg-secondary{% endif %}">
+                                {{ user.role }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Дата регистрации:</div>
+                        <div class="col-md-9">{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') if user.created_at else 'Нет данных' }}</div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">
+                        ← Вернуться в панель управления
+                    </a>
                 </div>
             </div>
         </div>
