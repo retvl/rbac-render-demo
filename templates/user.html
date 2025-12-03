@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Личный кабинет пользователя</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Добро пожаловать, {{ current_user.username }}!</h5>
+                <p class="card-text">Ваша роль: <strong>{{ current_user.role }}</strong></p>
+                
+                <h6>Ваши разрешения:</h6>
+                <ul>
+                    {% if current_user.has_permission(1) %}
+                        <li>Просмотр панели управления</li>
+                    {% endif %}
+                    {% if current_user.has_permission(2) %}
+                        <li>Редактирование своего профиля</li>
+                    {% endif %}
+                    {% if current_user.has_permission(4) %}
+                        <li>Просмотр всех пользователей</li>
+                    {% endif %}
+                    {% if current_user.has_permission(8) %}
+                        <li>Редактирование пользователей</li>
+                    {% endif %}
+                    {% if current_user.has_permission(16) %}
+                        <li>Удаление пользователей</li>
+                    {% endif %}
+                    {% if current_user.has_permission(32) %}
+                        <li>Просмотр логов</li>
+                    {% endif %}
+                    {% if current_user.has_permission(64) %}
+                        <li>Управление системой</li>
+                    {% endif %}
+                </ul>
+                
+                <h6>Доступные разделы:</h6>
+                <div class="mb-3">
+                    {% if current_user.role in ['Администратор', 'Модератор'] %}
+                        <a href="{{ url_for('moderator_panel') }}" class="btn btn-info me-2">
+                            Панель модератора
+                        </a>
+                    {% endif %}
+                    
+                    {% if current_user.role == 'Администратор' %}
+                        <a href="{{ url_for('admin_panel') }}" class="btn btn-danger">
+                            Панель администратора
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <div class="alert alert-info">
+                    <small>
+                        <strong>Принцип наименьших привилегий в действии:</strong><br>
+                        Каждый пользователь видит только те элементы интерфейса и имеет только те возможности, 
+                        которые необходимы для выполнения его функций.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

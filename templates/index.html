@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="jumbotron">
+            <h1 class="display-4">Демонстрация RBAC</h1>
+            <p class="lead">Разделение прав доступа (Role-Based Access Control) в веб-приложениях</p>
+            <hr class="my-4">
+            
+            <h5>Доступные роли и их возможности:</h5>
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Гость</h5>
+                            <ul class="text-start small">
+                                <li>Только вход в систему</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Пользователь</h5>
+                            <ul class="text-start small">
+                                <li>Личный кабинет</li>
+                                <li>Редактирование профиля</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Модератор</h5>
+                            <ul class="text-start small">
+                                <li>Все права пользователя</li>
+                                <li>Просмотр всех пользователей</li>
+                                <li>Изменение ролей</li>
+                                <li>Просмотр логов</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Администратор</h5>
+                            <ul class="text-start small">
+                                <li>Все права модератора</li>
+                                <li>Удаление пользователей</li>
+                                <li>Полный доступ к системе</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h5>Принципы, реализованные в демо:</h5>
+                <ul>
+                    <li><strong>Принцип наименьших привилегий:</strong> Каждая роль имеет только необходимые права</li>
+                    <li><strong>Разделение ответственности:</strong> Критические операции требуют разных ролей</li>
+                    <li><strong>Логирование действий:</strong> Все действия пользователей записываются в журнал</li>
+                    <li><strong>Защита на уровне UI и бэкенда:</strong> Проверки прав на всех уровнях приложения</li>
+                </ul>
+            </div>
+            
+            <div class="text-center mt-4">
+                {% if not current_user.is_authenticated %}
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">
+                        Начать демонстрацию
+                    </a>
+                {% else %}
+                    <a class="btn btn-success btn-lg" href="{{ url_for('dashboard') }}" role="button">
+                        Перейти в личный кабинет
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

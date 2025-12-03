@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Панель администратора</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-danger text-white">
+                        <h5>Полное управление пользователями</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Имя пользователя</th>
+                                    <th>Роль</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if user.role == 'Администратор' %}bg-danger
+                                            {% elif user.role == 'Модератор' %}bg-warning
+                                            {% elif user.role == 'Пользователь' %}bg-primary
+                                            {% else %}bg-secondary{% endif %}">
+                                            {{ user.role }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <!-- Исправленная строка: добавлен type="button" -->
+                                        <button type="button" class="btn btn-sm btn-danger" 
+                                                onclick="deleteUser({{ user.id }})"
+                                                {% if user.id == current_user.id %}disabled{% endif %}>
+                                            Удалить
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Журнал аудита (последние 50 записей)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            {% for log in logs %}
+                            <div class="log-entry mb-2">
+                                <small>
+                                    <strong>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</strong><br>
+                                    {{ log.action }}<br>
+                                    <span class="text-muted">IP: {{ log.ip_address }}</span>
+                                </small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-success">
+            <h6>Полные права администратора:</h6>
+            <ul>
+                <li>Просмотр и удаление всех пользователей</li>
+                <li>Доступ к полному журналу аудита</li>
+                <li>Все права модератора и пользователя</li>
+            </ul>
+        </div>
+        
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Назад в личный кабинет</a>
+    </div>
+</div>
+{% endblock %}
