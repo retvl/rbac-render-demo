@@ -2,82 +2,70 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="jumbotron">
-            <h1 class="display-4">Демонстрация RBAC</h1>
-            <p class="lead">Разделение прав доступа (Role-Based Access Control) в веб-приложениях</p>
+    <div class="col-md-10">
+        <div class="jumbotron bg-light p-5 rounded">
+            <h1 class="display-4">🎯 Демонстрация RBAC на Render</h1>
+            <p class="lead">Разделение прав доступа в веб-приложениях</p>
+            
+            {% if deployed_on_render %}
+            <div class="alert alert-success">
+                <h5>🌍 Приложение развернуто в облаке Render</h5>
+                <p>Доступно 24/7 по адресу: <strong>{{ site_url }}</strong></p>
+                <p>Для демонстрации на паре просто откройте эту ссылку на любом устройстве!</p>
+            </div>
+            {% endif %}
+            
             <hr class="my-4">
             
-            <h5>Доступные роли и их возможности:</h5>
-            <div class="row mt-4">
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Гость</h5>
-                            <ul class="text-start small">
-                                <li>Только вход в систему</li>
-                            </ul>
+            <h4>Тестовые пользователи:</h4>
+            <div class="row mt-3">
+                <div class="col-md-3 mb-3">
+                    <div class="card border-danger h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">👑 Администратор</h5>
+                            <p><strong>Логин:</strong> admin</p>
+                            <p><strong>Пароль:</strong> admin123</p>
+                            <p>Полный доступ ко всем функциям</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Пользователь</h5>
-                            <ul class="text-start small">
-                                <li>Личный кабинет</li>
-                                <li>Редактирование профиля</li>
-                            </ul>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card border-warning h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">🛡️ Модератор</h5>
+                            <p><strong>Логин:</strong> moderator</p>
+                            <p><strong>Пароль:</strong> moderator123</p>
+                            <p>Модерация контента, редактирование ролей</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Модератор</h5>
-                            <ul class="text-start small">
-                                <li>Все права пользователя</li>
-                                <li>Просмотр всех пользователей</li>
-                                <li>Изменение ролей</li>
-                                <li>Просмотр логов</li>
-                            </ul>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card border-primary h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">👤 Пользователь</h5>
+                            <p><strong>Логин:</strong> user</p>
+                            <p><strong>Пароль:</strong> user123</p>
+                            <p>Личный кабинет, редактирование профиля</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Администратор</h5>
-                            <ul class="text-start small">
-                                <li>Все права модератора</li>
-                                <li>Удаление пользователей</li>
-                                <li>Полный доступ к системе</li>
-                            </ul>
+                
+                <div class="col-md-3 mb-3">
+                    <div class="card border-secondary h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">👋 Гость</h5>
+                            <p><strong>Логин:</strong> guest</p>
+                            <p><strong>Пароль:</strong> guest123</p>
+                            <p>Минимальные права, только просмотр</p>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="mt-4">
-                <h5>Принципы, реализованные в демо:</h5>
-                <ul>
-                    <li><strong>Принцип наименьших привилегий:</strong> Каждая роль имеет только необходимые права</li>
-                    <li><strong>Разделение ответственности:</strong> Критические операции требуют разных ролей</li>
-                    <li><strong>Логирование действий:</strong> Все действия пользователей записываются в журнал</li>
-                    <li><strong>Защита на уровне UI и бэкенда:</strong> Проверки прав на всех уровнях приложения</li>
-                </ul>
             </div>
             
             <div class="text-center mt-4">
-                {% if not current_user.is_authenticated %}
-                    <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">
-                        Начать демонстрацию
-                    </a>
-                {% else %}
-                    <a class="btn btn-success btn-lg" href="{{ url_for('dashboard') }}" role="button">
-                        Перейти в личный кабинет
-                    </a>
-                {% endif %}
+                <a href="/login" class="btn btn-primary btn-lg">Начать демонстрацию</a>
             </div>
         </div>
     </div>
