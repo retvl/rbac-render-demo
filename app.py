@@ -221,6 +221,11 @@ def logout():
     
     return redirect(url_for('index'))
 
+@app.route('/ping')
+def ping():
+    """Эндпоинт для пинга, чтобы сервис не засыпал"""
+    return 'pong', 200
+
 def init_database():
     """Инициализация базы данных и создание тестовых пользователей"""
     with app.app_context():
